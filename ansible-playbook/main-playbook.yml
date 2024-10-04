@@ -1,0 +1,9 @@
+---
+- hosts: aws_instance
+  become: yes
+
+  roles:
+    - install-java
+    - install-tomcat
+    - config-tomcat
+    - deploy-app

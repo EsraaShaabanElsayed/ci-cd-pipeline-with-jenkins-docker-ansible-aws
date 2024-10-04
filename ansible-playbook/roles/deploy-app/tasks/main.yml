@@ -1,0 +1,15 @@
+---
+# roles/deploy/tasks/main.yml
+- name: Copy the Spring PetClinic WAR file to the Tomcat webapps directory
+  copy:
+
+    src: /home/esraa/Downloads/sample.war #This line need to be changed with the actual path of the project file war 
+    dest: /var/lib/tomcat10/webapps/
+    owner: tomcat
+    group: tomcat
+    mode: '0644'
+
+- name: Restart Tomcat service
+  systemd:
+    name: tomcat10
+    state: restarted

@@ -1,0 +1,16 @@
+---
+# roles/tomcat/tasks/main.yml
+- name: Update apt package list
+  apt:
+    update_cache: yes
+
+- name: Install Tomcat
+  apt:
+    name: tomcat10
+    state: present
+
+- name: Ensure Tomcat service is started
+  systemd:
+    name: tomcat10
+    state: started
+    enabled: yes
