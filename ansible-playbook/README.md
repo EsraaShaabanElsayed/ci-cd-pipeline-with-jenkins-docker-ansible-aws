@@ -24,7 +24,7 @@ playbook.yml # Main Ansible playbook inventory # Inventory file for Ansible samp
 
     ```ini
     [aws_instance]
-    instance-ip ansible_ssh_user=ubuntu ansible_ssh_private_key_file=path/to/deployment-Instance.pem
+    instance-ip ansible_ssh_user=ubuntu ansible_ssh_private_key_file=path/to/key-file.pem
     ```
 
 2. **Place the WAR file**: Ensure the `sample.war` file is in the root directory of this repository.
