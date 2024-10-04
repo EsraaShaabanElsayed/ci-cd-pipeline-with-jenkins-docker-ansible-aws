@@ -15,23 +15,7 @@ Before you run the playbook, ensure you have the following:
 - The WAR file for the Spring PetClinic application.
 
 ## Project Structure
-ansible-playbook/
-├── inventory    # Inventory file listing the target AWS EC2 instances
-│                 
-├── roles/
-│   ├── install-java/          # A specific role for install java on ec2 ubuntu os 
-│   │   └──  tasks/            
-├── install-tomcat/          # A specific role for installing tomcat  on ec2
-│   │   └──  tasks/            
-├── config-tomcat/          # A specific role for  configuring tomcat  on ec2
-│   │   ├── tasks/            #
-│   │   ├── templates/        
-│   │   └── handlers/            
-├── deploy-app/          # A specific role for deploying the war file in the ec2 instance 
-│   │   └──tasks/           
-└── main-playbook.yml          # The main Ansible playbook that install java&tomcat and configure tomcat and deploy the app 
-
-
+ansible-playbook/ ├── inventory # Inventory file listing the target AWS EC2 instances ├── roles/ # Directory containing Ansible roles │ ├── install-java/ # Role for installing Java on Ubuntu EC2 │ │ └── tasks/ # Tasks for Java installation │ ├── install-tomcat/ # Role for installing Tomcat on EC2 │ │ └── tasks/ # Tasks for Tomcat installation │ ├── config-tomcat/ # Role for configuring Tomcat on EC2 │ │ ├── tasks/ # Tasks for Tomcat configuration │ │ ├── templates/ # Jinja2 templates for Tomcat configuration (if any) │ │ └── handlers/ # Handlers for notifying changes in Tomcat configuration │ └── deploy-app/ # Role for deploying the WAR file on EC2 │ └── tasks/ # Tasks for deploying the application └── main-playbook.yml # The main Ansible playbook that installs Java, Tomcat, configures Tomcat, and deploys the application
 playbook.yml # Main Ansible playbook inventory # Inventory file for Ansible sample.war # WAR file for the Spring PetClinic application
 
 ## Configuration
