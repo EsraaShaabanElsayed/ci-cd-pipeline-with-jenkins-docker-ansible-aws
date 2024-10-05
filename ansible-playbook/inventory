@@ -1,0 +1,2 @@
+[aws_instance]
+54.92.166.178 ansible_user=ubuntu ansible_ssh_private_key_file=/home/esraa/deployment-Instance.pem
