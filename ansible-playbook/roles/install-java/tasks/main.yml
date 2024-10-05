@@ -1,6 +1,0 @@
----
-# roles/java/tasks/main.yml
-- name: Install Java
-  apt:
-    name: default-jdk
-    state: present
