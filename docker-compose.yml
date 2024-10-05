@@ -25,7 +25,7 @@ services:
       - "5051:8080"   
 
   petclinic:
-    build: .
+    image: mohamedwaleed77/depi_petclinic
     container_name: petapp
     depends_on:
       - mysql
@@ -35,5 +35,4 @@ services:
       SPRING_DATASOURCE_PASSWORD: petclinic   
     ports:
       - "5050:8080"   
-    image: depi_petapp
-
+  
