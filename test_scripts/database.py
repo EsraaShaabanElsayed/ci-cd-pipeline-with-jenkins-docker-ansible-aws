@@ -6,8 +6,8 @@ form_url = 'http://localhost:5050/petclinic/owners/new'
 
 # Data to be filled in the form
 data = {
-    'firstName': 'abcdef',
-    'lastName': 'ghijklmnop',
+    'firstName': 'abcdefgh',
+    'lastName': 'ijklmnop',
     'address': 'email@example.com',
     'city': 'Cairo',
     'telephone': '12345',
@@ -18,36 +18,35 @@ data = {
 session = requests.Session()
 response = session.post(form_url, data=data)
 
-# Check if the form submission is successful
-if response.status_code == 200:
-    print('Form submitted successfully!')
+print('Form submitted successfully!')
 
-    # Database connection details
-    connection = mysql.connector.connect(
-        host='localhost',
-        database='petclinic',  
-        user='petclinic',  
-        password='petclinic'  
-    )
+# Database connection details
+connection = mysql.connector.connect(
+    host='localhost',
+    database='petclinic',
+    user='petclinic',
+    password='petclinic'
+)
 
-    if connection.is_connected():
-        cursor = connection.cursor()
-        # Query to check if the entry exists
-        query = "SELECT * FROM owners WHERE first_name = %s AND last_name = %s"
-        cursor.execute(query, (data['firstName'], data['lastName']))
-        result = cursor.fetchall()
+# Create a cursor object
+cursor = connection.cursor()
 
-        # If the entry is found, delete it
-        if result:
-            print('Entry found in the database:', result)
-            delete_query = "DELETE FROM owners WHERE first_name = %s AND last_name = %s"
-            cursor.execute(delete_query, (data['firstName'], data['lastName']))
-            connection.commit()  # Commit the changes
-            print('Entry removed from the database.')
-        else:
-            print('No entry found in the database.')
+# Query to check if the entry exists
+query = "SELECT * FROM owners WHERE first_name = %s AND last_name = %s"
+cursor.execute(query, (data['firstName'], data['lastName']))
 
-        cursor.close()
-        connection.close()
-else:
-    print(f'Failed to submit the form. Status code: {response.status_code}')
+# Fetch all matching results
+result = cursor.fetchall()
+
+# Delete the entry
+print('Entry found in the database:', result)
+delete_query = "DELETE FROM owners WHERE first_name = %s AND last_name = %s"
+cursor.execute(delete_query, (data['firstName'], data['lastName']))
+
+# Commit the changes to remove the entry
+connection.commit()
+print('Entry removed from the database.')
+
+# Close cursor and connection
+cursor.close()
+connection.close()
