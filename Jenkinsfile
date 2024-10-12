@@ -4,7 +4,7 @@ pipeline {
     environment {
         TF_DIR = 'terraform' // Directory where your Terraform files are located
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
-        ANSIBLE_PLAYBOOK = 'palybook.yml' // Name of the Ansible playbook file
+        ANSIBLE_PLAYBOOK = 'playbook.yml' // Corrected spelling of playbook
         INVENTORY_FILE = 'inventory' // Ansible inventory file
     }
 
@@ -22,21 +22,23 @@ pipeline {
                 }
             }
         }
+
         stage('Terraform Plan') {
             steps {
-                dir('terraform') {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]){
-                    sh 'terraform plan -out=tfplan'
+                dir(TF_DIR) { // Changed to use TF_DIR variable
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                        sh 'terraform plan -out=tfplan'
+                    }
                 }
-            }
             }
         }
+
         stage('Terraform Apply') {
             steps {
-                dir(TF_DIR) {
+                dir(TF_DIR) { // Changed to use TF_DIR variable
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
-                    sh 'terraform apply -auto-approve tfplan'
-                }
+                        sh 'terraform apply -auto-approve tfplan'
+                    }
                 }
             }
         }
@@ -44,13 +46,12 @@ pipeline {
         stage('Ansible Deploy') {
             steps {
                 script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]){
-                    sh 'ansible-playbook -i "ec2, ansible_ssh_host={{ lookup(\'terraform\', \'instance_public_ip\') }}" palybook.yml'
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                        // Corrected to use ANSIBLE_PLAYBOOK_DIR and fix the syntax for the ansible-playbook command
+                        sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK_DIR}/${ANSIBLE_PLAYBOOK} --extra-vars=\"ec2_host={{ lookup('terraform', 'instance_public_ip') }}\""
+                    }
                 }
             }
         }
     }
-    }
-
-    
 }
