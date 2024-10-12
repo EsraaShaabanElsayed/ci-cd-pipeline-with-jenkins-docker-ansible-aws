@@ -1,0 +1,75 @@
+---
+  - name: Deploy Docker container on Ubuntu EC2
+    hosts: ec2
+    become: yes
+    vars:
+      docker_image: "mohamedwaleed77/depi_petclinic:latest"
+      container_name: "petclinic_app"
+      host_port: 5000
+      container_port: 8080
+      venv_path: "/opt/ansible-venv" 
+      ansible_python_interpreter: /opt/ansible-venv/bin/python # Path for Python virtual environment
+    tasks:
+      - name: Update apt cache
+        apt:
+          update_cache: yes
+  
+      - name: Install dependencies for Docker installation
+        apt:
+          name:
+            - apt-transport-https
+            - ca-certificates
+            - curl
+            - gnupg
+            - lsb-release
+          state: present
+  
+      - name: Install Python3 and venv
+        apt:
+          name:
+            - python3
+            - python3-venv
+          state: present
+  
+      - name: Create a Python virtual environment
+        command: python3 -m venv {{ venv_path }}
+        args:
+          creates: "{{ venv_path }}"
+  
+      - name: Install Docker SDK for Python in the virtual environment
+        command: "{{ venv_path }}/bin/pip install docker"
+      
+      - name: Download Docker installation script
+        command: curl -fsSL https://get.docker.com -o get-docker.sh
+  
+      - name: Run Docker installation script
+        command: sh get-docker.sh
+  
+      - name: Ensure Docker is running
+        service:
+          name: docker
+          state: started
+          enabled: true
+  
+      - name: Pull an image
+        community.docker.docker_image:
+          name: "{{ docker_image }}"
+          source: pull
+              # Select platform for pulling. If not specified, will pull whatever docker prefers.
+          pull:
+              platform: amd64
+        
+      - name: Stop a container remove any existing container
+        community.docker.docker_container:
+          name: "{{ container_name }}"
+          state: absent
+          
+
+  
+      - name: Run the new Docker container
+        community.docker.docker_container:
+          name: "{{ container_name }}"
+          image: "{{ docker_image }}"
+          state: started
+          ports:
+            - "{{ host_port }}:{{ container_port }}"
