@@ -1,6 +1,6 @@
 # Docker Deployment on Ubuntu EC2
 
-This repository contains an Ansible playbook for deploying a Docker container on an Ubuntu EC2 instance as part of a larger project. The playbook installs necessary dependencies, sets up a Python virtual environment, and manages Docker operations.
+This Section contains an Ansible playbook for deploying a Docker container on an Ubuntu EC2 instance as part of a larger project. The playbook installs necessary dependencies, sets up a Python virtual environment, and manages Docker operations.
 
 ## Overview
 
@@ -29,7 +29,7 @@ The following variables are defined in the playbook:
 
 Update the inventory.ini file with your EC2 instance details.
 
-Run the Ansible playbook:
+
 
 
 
