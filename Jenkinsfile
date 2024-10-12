@@ -4,7 +4,7 @@ pipeline {
     environment {
         TF_DIR = 'terraform' // Directory where your Terraform files are located
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
-        ANSIBLE_PLAYBOOK = 'playbook.yml' // Corrected spelling of playbook
+        ANSIBLE_PLAYBOOK = 'mainplaybook.yml' // Corrected spelling of playbook
         INVENTORY_FILE = 'inventory' // Ansible inventory file
     }
 
