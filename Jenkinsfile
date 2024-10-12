@@ -25,16 +25,18 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 dir('terraform') {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']])
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]){
                     sh 'terraform plan -out=tfplan'
                 }
+            }
             }
         }
         stage('Terraform Apply') {
             steps {
                 dir(TF_DIR) {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) 
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
                     sh 'terraform apply -auto-approve tfplan'
+                }
                 }
             }
         }
@@ -42,11 +44,12 @@ pipeline {
         stage('Ansible Deploy') {
             steps {
                 script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']])
-                    sh 'ansible-playbook -i "ec2, ansible_ssh_host={{ lookup(\'terraform\', \'instance_public_ip\') }}" deploy.yml'
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]){
+                    sh 'ansible-playbook -i "ec2, ansible_ssh_host={{ lookup(\'terraform\', \'instance_public_ip\') }}" palybook.yml'
                 }
             }
         }
+    }
     }
 
     
