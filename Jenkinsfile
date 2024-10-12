@@ -26,7 +26,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 dir(TF_DIR) { // Changed to use TF_DIR variable
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS']]) {
                         sh 'terraform plan -out=tfplan'
                     }
                 }
@@ -36,7 +36,7 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 dir(TF_DIR) { // Changed to use TF_DIR variable
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS']]) {
                         sh 'terraform apply -auto-approve tfplan'
                     }
                 }
@@ -46,7 +46,7 @@ pipeline {
         stage('Ansible Deploy') {
             steps {
                 script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS']]) {
                         // Corrected to use ANSIBLE_PLAYBOOK_DIR and fix the syntax for the ansible-playbook command
                         sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK_DIR}/${ANSIBLE_PLAYBOOK} --extra-vars=\"ec2_host={{ lookup('terraform', 'instance_public_ip') }}\""
                     }
