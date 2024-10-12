@@ -10,6 +10,10 @@
       venv_path: "/opt/ansible-venv" 
       ansible_python_interpreter: /opt/ansible-venv/bin/python # Path for Python virtual environment
     tasks:
+      - name: Output the instance ID
+        debug:
+          msg: "The instance ID is {{ lookup('terraform', 'instance_id') }}"
+
       - name: Update apt cache
         apt:
           update_cache: yes

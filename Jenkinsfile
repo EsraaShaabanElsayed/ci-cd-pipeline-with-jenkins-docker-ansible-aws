@@ -40,18 +40,5 @@ pipeline {
         }
     }
 
-        
-    post {
-        // always {
-        //     dir(TF_DIR) {
-        //         sh 'terraform destroy -auto-approve'
-        //     }
-        // }
-        // failure {
-        //     echo 'Pipeline failed!'
-        // }
-        // success {
-        //     echo 'Pipeline completed successfully!'
-        // }
-    }
+    
 }
