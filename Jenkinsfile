@@ -22,7 +22,13 @@ pipeline {
                 }
             }
         }
-
+        stage('Terraform Plan') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
         stage('Terraform Apply') {
             steps {
                 dir(TF_DIR) {
