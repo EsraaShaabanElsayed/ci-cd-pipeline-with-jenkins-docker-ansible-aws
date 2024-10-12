@@ -33,8 +33,8 @@ resource "aws_security_group" "allow_5000" {
 
   
   ingress {
-    from_port   = 5000
-    to_port     = 5000
+    from_port   = 5050
+    to_port     = 5050
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # Update to restrict access if needed
   }
