@@ -63,7 +63,7 @@ resource "aws_instance" "ec2_instance" {
  # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
   key_name      = aws_key_pair.my_key.key_name
 
-  vpc_security_group_ids = [aws_security_group.allow_5000.id,aws_security_group.my_sg.id]
+  vpc_security_group_ids = [aws_security_group.allow_5000.id]
 
   
 
@@ -75,9 +75,6 @@ resource "aws_instance" "ec2_instance" {
   # User data to install SSM agent if not pre-installed
   user_data = <<-EOF
     #!/bin/bash
-    apt install -y amazon-ssm-agent
-    systemctl enable amazon-ssm-agent
-    systemctl start amazon-ssm-agent
     sudo apt-get update -y
     sudo apt-get install -y python3 python3-pip
 
