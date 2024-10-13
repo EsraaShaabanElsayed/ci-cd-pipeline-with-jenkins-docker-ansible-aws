@@ -54,6 +54,8 @@ resource "aws_instance" "ec2_instance" {
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
 
   vpc_security_group_ids = [aws_security_group.allow_5000.id]
+  subnet_id = data.aws_vpc.default.id
+
 
   tags = {
     Name = "ssm-managed-ec2-instance"
