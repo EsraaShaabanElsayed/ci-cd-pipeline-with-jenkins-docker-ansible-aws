@@ -40,7 +40,10 @@
         command: python3 -m venv {{ venv_path }}
         args:
           creates: "{{ venv_path }}"
-  
+
+      - name: Install boto3 in the virtual environment
+        command: "{{ venv_path }}/bin/pip install boto3"
+        
       - name: Install Docker SDK for Python in the virtual environment
         command: "{{ venv_path }}/bin/pip install docker"
       
