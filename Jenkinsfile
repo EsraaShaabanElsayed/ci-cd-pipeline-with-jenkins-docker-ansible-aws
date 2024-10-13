@@ -85,7 +85,7 @@ pipeline {
                 file(credentialsId: 'ec2-secrtfile', variable: 'SSH_KEY_PATH')
             ]) {
         
-                 sh "ssh-keyscan -H ${instancePublicIp} >> ~/.ssh/known_hosts"
+                  env.ANSIBLE_HOST_KEY_CHECKING = 'False'
                 
                     // Run the Ansible playbook
                     sh """
