@@ -65,6 +65,11 @@ resource "aws_instance" "ec2_instance" {
     apt install -y amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     systemctl start amazon-ssm-agent
+    sudo apt-get update -y
+    sudo apt-get install -y python3 python3-pip
+
+# Install Boto3
+pip3 install boto3
   EOF
 }
 
