@@ -57,7 +57,7 @@ pipeline {
         pwd
         cd ../ansible-playbook/
         pwd
-        touch inventory
+        touch  /var/lib/jenkins/workspace/project/ansible-playbook/inventory
         echo "[ec2]" > ansible-playbook/inventory
         echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu" >> ansible-playbook/inventory
     """
