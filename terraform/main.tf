@@ -25,13 +25,22 @@ resource "aws_iam_instance_profile" "ec2_ssm_instance_profile" {
   name = "ec2-ssm-instance-profile"
   role = aws_iam_role.ec2_ssm_role.name
 }
+resource "aws_key_pair" "my_key" {
+  key_name   = "my-key-pair"
+  public_key = var.public_key  # Use a Terraform variable to pass the public key
+}
 
 # Security Group allowing SSH and port 5000
 resource "aws_security_group" "allow_5000" {
-  name        = "allow_5000"
-  description = "Allow  port 5000 inbound traffic"
+  name        = "allow_5050"
+  description = "Allow  port 5050 inbound traffic"
 
-  
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Change this to restrict access
+  }
   ingress {
     from_port   = 5050
     to_port     = 5050
@@ -51,9 +60,11 @@ resource "aws_security_group" "allow_5000" {
 resource "aws_instance" "ec2_instance" {
   ami           = "ami-0fff1b9a61dec8a5f"  # Update with the appropriate AMI ID for your region
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
+ # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
+  key_name      = aws_key_pair.my_key.key_name
 
-  vpc_security_group_ids = [aws_security_group.allow_5000.id]
+  vpc_security_group_ids = [aws_security_group.allow_5000.id,aws_security_group.my_sg.id]
+
   
 
 

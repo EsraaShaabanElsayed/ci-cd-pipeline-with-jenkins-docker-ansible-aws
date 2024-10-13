@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        SS_KEY = credentials('ec2-key')
         TF_DIR = 'terraform' // Directory where your Terraform files are located
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
         ANSIBLE_PLAYBOOK = 'mainplaybook.yml' // Corrected spelling of playbook
@@ -38,7 +39,7 @@ pipeline {
                 dir(TF_DIR) {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         script {
-                            sh 'terraform apply -auto-approve tfplan'
+                            sh 'terraform apply -auto-approve tfplan -var "public_key=${PUBLIC_KEY}"'
                             instanceId = sh(script: "terraform output -json | jq -r '.instance_id.value'", returnStdout: true).trim()
                             instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
                             echo "Instance ID: ${instanceId}"
@@ -53,12 +54,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-            writeFile file: 'inventory', text: "[ec2]\nyour_instance_id ansible_connection=aws_ssm\n"
-            sh ''' 
-            python3 --version
-            which python3
-            '''
-            sh 'ansible-playbook -i inventory ansible-playbook/mainplaybook.yml'
+        
+                    writeFile file: INVENTORY_FILE, text: "[ec2]\n${PUBLIC_IP} ansible_ssh_private_key_file=${SSH_KEY} ansible_user=ec2-user\n"
+
+                    // Run the Ansible playbook
+                    sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK_DIR}/${ANSIBLE_PLAYBOOK}"
         
                     }
                 }
