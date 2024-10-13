@@ -53,7 +53,9 @@ pipeline {
                     sh "ls -al"
                     // Write the inventory file for Ansible
         sh """
-        touch ansible-playbook/inventory
+        
+        cd ../ansible-playbook/
+        touch inventory
         echo "[ec2]" > ansible-playbook/inventory
         echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu" >> ansible-playbook/inventory
     """
