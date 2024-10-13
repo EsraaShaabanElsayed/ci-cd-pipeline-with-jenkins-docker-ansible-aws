@@ -14,6 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'test-terraform', url: 'https://github.com/EsraaShaabanElsayed/ci-cd-pipeline-with-jenkins-docker-ansible-aws.git'
+                sh 'ls'
             }
         }
 
