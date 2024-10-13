@@ -56,7 +56,7 @@ pipeline {
                     writeFile file: INVENTORY_FILE, text: inventoryContent
                     
                     // Output the contents of the inventory file for verification
-                    sh "cat ${INVENTORY_FILE}"
+                 //   sh "cat ${INVENTORY_FILE}"
                 }
             }
         }
