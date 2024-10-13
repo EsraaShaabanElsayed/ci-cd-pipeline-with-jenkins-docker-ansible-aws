@@ -60,6 +60,9 @@ pipeline {
         
                  
                     sh "ls -al"
+                    sh "cat ${INVENTORY_FILE}"
+                    echo "SSH Key: ${SS_KEY}"
+
                     // Run the Ansible playbook
                     sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK} -vvv"
         
