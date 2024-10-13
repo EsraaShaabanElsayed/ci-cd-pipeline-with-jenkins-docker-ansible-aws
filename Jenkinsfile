@@ -49,7 +49,10 @@ pipeline {
                             echo "Writing to inventory file with the following values:"
                             echo "[ec2]"
                             echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu"
-
+                        }
+                    }}
+                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        script {
                             writeFile file: INVENTORY_FILE, text: "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
                             sh "cat ${INVENTORY_FILE}"  
                 }
