@@ -50,6 +50,7 @@ pipeline {
                     
                     // Log the instance public IP
                     echo "Instance Public IP: ${instancePublicIp}"
+                    sh"pwd"
                     sh "ls -al"
                     // Write the inventory file for Ansible
         sh """
