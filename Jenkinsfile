@@ -5,8 +5,8 @@ pipeline {
         SS_KEY = credentials('ec2-key')
         TF_DIR = 'terraform' // Directory where your Terraform files are located
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
-        ANSIBLE_PLAYBOOK = '${ANSIBLE_PLAYBOOK_DIR}/mainplaybook.yml' 
-        INVENTORY_FILE = '${ANSIBLE_PLAYBOOK_DIR}/inventory' // Ansible inventory file
+        ANSIBLE_PLAYBOOK = "${ANSIBLE_PLAYBOOK_DIR}/mainplaybook.yml"
+        INVENTORY_FILE = "${ANSIBLE_PLAYBOOK_DIR}/inventory"// Ansible inventory file
        
     }
 
