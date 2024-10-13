@@ -80,7 +80,7 @@ pipeline {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
         
-                
+                   sh "pwd"
                     sh "ls -al"
                     sh "cat ${INVENTORY_FILE}"
                     echo "SSH Key: ${SS_KEY}"
