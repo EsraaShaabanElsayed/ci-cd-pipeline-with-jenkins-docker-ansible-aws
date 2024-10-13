@@ -54,6 +54,10 @@ pipeline {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
             writeFile file: 'inventory', text: "[ec2]\nyour_instance_id ansible_connection=aws_ssm\n"
+            sh ''' 
+            python3 --version
+            which python3
+            '''
             sh 'ansible-playbook -i inventory ansible-playbook/mainplaybook.yml'
         
                     }
