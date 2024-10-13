@@ -7,6 +7,7 @@ pipeline {
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
         ANSIBLE_PLAYBOOK = "${ANSIBLE_PLAYBOOK_DIR}/mainplaybook.yml"
         INVENTORY_FILE = "${ANSIBLE_PLAYBOOK_DIR}/inventory"// Ansible inventory file
+
     
     }
 
@@ -79,14 +80,17 @@ pipeline {
         stage('Ansible Deploy') {
             steps {
                 script {
-                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    withCredentials([
+                aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
+                file(credentialsId: 'ec2-secretfile', variable: 'SSH_KEY_PATH')
+            ]) {
         
                 
-                    sh "cat ${INVENTORY_FILE}"
-                    echo "SSH Key: ${SS_KEY}"
-
+                
                     // Run the Ansible playbook
-                    sh "ansible-playbook -i ${SS_KEY} ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK} -vvv"
+                    sh """
+                    ansible-playbook -i ${INVENTORY_FILE} --private-key=${SSH_KEY_PATH} ${ANSIBLE_PLAYBOOK} -vvv
+                """
         
                     
                 }
