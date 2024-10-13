@@ -82,7 +82,7 @@ pipeline {
                 script {
                     withCredentials([
                 aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-                file(credentialsId: 'ec2-secretfile', variable: 'SSH_KEY_PATH')
+                file(credentialsId: 'ec2-secrtfile', variable: 'SSH_KEY_PATH')
             ]) {
         
                 
@@ -100,3 +100,6 @@ pipeline {
     }
 
 }
+
+ec2-secretfile
+ec2-secrtfile
