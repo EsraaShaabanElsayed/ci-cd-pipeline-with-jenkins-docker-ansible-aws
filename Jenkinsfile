@@ -54,6 +54,7 @@ pipeline {
                     // Write the inventory file for Ansible
                     def inventoryContent = "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
                     writeFile file: INVENTORY_FILE, text: inventoryContent
+                     sh "cat ${INVENTORY_FILE}"
                     
                     // Output the contents of the inventory file for verification
                  //   sh "cat ${INVENTORY_FILE}"
