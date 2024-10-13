@@ -7,6 +7,7 @@ target/*
 .idea
 *.iml
 /target
+/.terraform
 .sts4-cache/
 .vscode/*
 !.vscode/settings.json
