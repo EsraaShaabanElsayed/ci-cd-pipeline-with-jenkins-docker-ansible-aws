@@ -46,7 +46,14 @@ pipeline {
                         def instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
                             
                             echo "Instance Public IP: ${instancePublicIp}"
-                             writeFile file: INVENTORY_FILE, text: "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
+                            echo "Writing to inventory file with the following values:"
+                            echo "[ec2]"
+                            echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu"
+
+                            writeFile file: INVENTORY_FILE, text: "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
+                            sh "cat ${INVENTORY_FILE}"  
+                }
+                           
                         }
                     }
                 }
