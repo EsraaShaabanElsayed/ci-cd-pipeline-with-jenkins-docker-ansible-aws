@@ -5,7 +5,7 @@ pipeline {
         SS_KEY = credentials('ec2-key')
         TF_DIR = 'terraform' // Directory where your Terraform files are located
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
-        ANSIBLE_PLAYBOOK = 'mainplaybook.yml' 
+        ANSIBLE_PLAYBOOK = '${ANSIBLE_PLAYBOOK_DIR}/mainplaybook.yml' 
         INVENTORY_FILE = '${ANSIBLE_PLAYBOOK_DIR}/inventory' // Ansible inventory file
        
     }
@@ -58,12 +58,12 @@ pipeline {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
         
-                  dir(ANSIBLE_PLAYBOOK_DIR) {
+                 
                     sh "ls -al"
                     // Run the Ansible playbook
                     sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK} -vvv"
         
-                    }
+                    
                 }
                 }
             }
