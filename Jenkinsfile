@@ -58,7 +58,7 @@ pipeline {
                     }
                 }
             }
-        }
+        
 
         stage('Ansible Deploy') {
             steps {
@@ -79,4 +79,5 @@ pipeline {
             }
         }
     }
+}
 
