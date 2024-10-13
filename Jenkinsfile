@@ -25,10 +25,8 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                dir(TF_DIR) { // Changed to use TF_DIR variable
-                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-   
-
+                dir(TF_DIR) {
+                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh 'terraform plan -out=tfplan'
                     }
                 }
@@ -37,16 +35,15 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir(TF_DIR) { // Changed to use TF_DIR variable
+                dir(TF_DIR) {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    
-                script {
-                    sh 'terraform apply -auto-approve  tfplan'
-                    def instanceId = sh(script: "terraform output -json | jq -r '.instance_id.value'", returnStdout: true).trim()
-                    def instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
-                    echo "Instance ID: ${instanceId}"
-                    echo "Instance Public IP: ${instancePublicIp}"
-                }
+                        script {
+                            sh 'terraform apply -auto-approve tfplan'
+                            instanceId = sh(script: "terraform output -json | jq -r '.instance_id.value'", returnStdout: true).trim()
+                            instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
+                            echo "Instance ID: ${instanceId}"
+                            echo "Instance Public IP: ${instancePublicIp}"
+                        }
                     }
                 }
             }
@@ -56,12 +53,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    
-                    script {
-                    // Generate inventory file with the instance public IP
-                    writeFile file: 'inventory', text: "[ec2]\n${instancePublicIp}\n"
-                    sh 'ansible-playbook -i inventory ansible-playbook/mainplaybook.yml'
-                }
+                        // Create inventory file using instancePublicIp
+                        writeFile file: 'inventory', text: "[ec2]\n${instancePublicIp}\n"
+                        // Run Ansible playbook
+                        sh 'ansible-playbook -i inventory ansible-playbook/mainplaybook.yml'
                     }
                 }
             }
