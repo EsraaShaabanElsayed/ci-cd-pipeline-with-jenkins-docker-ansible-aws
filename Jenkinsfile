@@ -53,10 +53,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        // Create inventory file using instancePublicIp
-                        writeFile file: 'inventory', text: "[ec2]\n${instancePublicIp}\n"
-                        // Run Ansible playbook
-                        sh 'ansible-playbook -i inventory ansible-playbook/mainplaybook.yml'
+            writeFile file: 'inventory', text: "[ec2]\nyour_instance_id ansible_connection=aws_ssm\n"
+            sh 'ansible-playbook -i inventory ansible-playbook/mainplaybook.yml'
+        
                     }
                 }
             }

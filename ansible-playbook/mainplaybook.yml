@@ -1,6 +1,7 @@
 ---
   - name: Deploy Docker container on Ubuntu EC2
     hosts: ec2
+    connection: aws_ssm 
     become: yes
     vars:
       docker_image: "mohamedwaleed77/depi_petclinic:latest"
