@@ -52,10 +52,12 @@ pipeline {
                     echo "Instance Public IP: ${instancePublicIp}"
                     sh "ls -al"
                     // Write the inventory file for Ansible
-                    sh | 
-                        touch ansible-playbook/inventory 
-                        echo  "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n" > ansible-playbook/inventory
-                        cat ansible-playbook/inventory 
+        sh """
+        touch ansible-playbook/inventory
+        echo "[ec2]" > ansible-playbook/inventory
+        echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu" >> ansible-playbook/inventory
+    """
+    sh "cat ansible-playbook/inventory"
                      //sh "cat ${INVENTORY_FILE}"
                     
                     // Output the contents of the inventory file for verification
