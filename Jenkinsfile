@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SS_KEY = credentials('ec2-key')
+        
         TF_DIR = 'terraform' // Directory where your Terraform files are located
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
         ANSIBLE_PLAYBOOK = "${ANSIBLE_PLAYBOOK_DIR}/mainplaybook.yml"
@@ -89,6 +89,8 @@ pipeline {
                 
                     // Run the Ansible playbook
                     sh """
+                    ls
+                    chmod 400 ${SSH_KEY_PATH}
                     ansible-playbook -i ${INVENTORY_FILE} --private-key=${SSH_KEY_PATH} ${ANSIBLE_PLAYBOOK} -vvv
                 """
         
