@@ -50,7 +50,7 @@ pipeline {
                     
                     // Log the instance public IP
                     echo "Instance Public IP: ${instancePublicIp}"
-                    
+                    sh "ls -al"
                     // Write the inventory file for Ansible
                     def inventoryContent = "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
                     writeFile file: INVENTORY_FILE, text: inventoryContent
