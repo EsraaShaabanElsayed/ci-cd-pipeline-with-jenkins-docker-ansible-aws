@@ -28,7 +28,7 @@ pipeline {
             steps {
                 dir(TF_DIR) {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        sh 'terraform plan -out=tfplan'
+                        sh 'terraform plan -out=tfplan -var "public_key=${PUBLIC_KEY}"'
                     }
                 }
             }
