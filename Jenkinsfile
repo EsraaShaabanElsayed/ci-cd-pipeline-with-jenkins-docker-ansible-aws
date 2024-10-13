@@ -28,7 +28,7 @@ pipeline {
             steps {
                 dir(TF_DIR) {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        sh 'terraform plan -out=tfplan -var "public_key=${PUBLIC_KEY}"'
+                        sh 'terraform plan -out=tfplan'
                     }
                 }
             }
@@ -39,10 +39,10 @@ pipeline {
                 dir(TF_DIR) {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         script {
-                            sh 'terraform apply -auto-approve tfplan -var "public_key=${PUBLIC_KEY}"'
-                            instanceId = sh(script: "terraform output -json | jq -r '.instance_id.value'", returnStdout: true).trim()
+                            sh 'terraform apply -auto-approve tfplan '
+                            
                             instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
-                            echo "Instance ID: ${instanceId}"
+                            
                             echo "Instance Public IP: ${instancePublicIp}"
                         }
                     }
@@ -55,7 +55,7 @@ pipeline {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
         
-                    writeFile file: INVENTORY_FILE, text: "[ec2]\n${PUBLIC_IP} ansible_ssh_private_key_file=${SSH_KEY} ansible_user=ec2-user\n"
+                    writeFile file: INVENTORY_FILE, text: "[ec2]\n${PUBLIC_IP} ansible_ssh_private_key_file=${SSH_KEY} ansible_user=ubuntu \n"
 
                     // Run the Ansible playbook
                     sh "ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK_DIR}/${ANSIBLE_PLAYBOOK}"
