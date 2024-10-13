@@ -41,7 +41,10 @@ pipeline {
         stage('Terraform Apply') {
     steps {
         dir(TF_DIR) {
-            withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+           withCredentials([
+                aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
+                file(credentialsId: 'ec2-secrtfile', variable: 'SSH_KEY_PATH') // Using the secret file
+            ])  {
                 script {
                     // Apply Terraform changes
                     sh 'terraform apply -auto-approve tfplan'
@@ -60,7 +63,7 @@ pipeline {
         pwd
         touch   ${env.WORKSPACE}/ansible-playbook/inventory
         echo "[ec2]" > ${env.WORKSPACE}/ansible-playbook/inventory
-        echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu" >> ${env.WORKSPACE}/ansible-playbook/inventory
+        echo "${instancePublicIp} ansible_ssh_private_key_file=${SSH_KEY_PATH} ansible_user=ubuntu" >> ${env.WORKSPACE}/ansible-playbook/inventory
     """
     sh "cat ${env.WORKSPACE}/ansible-playbook/inventory"
                      //sh "cat ${INVENTORY_FILE}"
@@ -85,7 +88,7 @@ pipeline {
                 file(credentialsId: 'ec2-secrtfile', variable: 'SSH_KEY_PATH')
             ]) {
         
-                  env.ANSIBLE_HOST_KEY_CHECKING = 'False'
+                env.ANSIBLE_HOST_KEY_CHECKING = 'False'
                 
                     // Run the Ansible playbook
                     sh """
@@ -103,5 +106,4 @@ pipeline {
 
 }
 
-ec2-secretfile
-ec2-secrtfile
+
