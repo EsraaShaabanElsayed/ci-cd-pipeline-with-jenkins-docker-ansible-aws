@@ -33,7 +33,7 @@ resource "aws_security_group" "allow_5050_and_ssh" {
 
 # Provision an EC2 instance with the updated security group
 resource "aws_instance" "ec2_instance" {
-  ami           = "ami-0fff1b9a61dec8a5f"  # Update with the appropriate AMI ID for your region
+  ami           = "ami-0866a3c8686eaeeba"  # Update with the appropriate AMI ID for your region
   instance_type = "t2.micro"
  # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
   key_name      = aws_key_pair.jenkins_ec2.key_name 
