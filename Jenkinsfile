@@ -37,30 +37,31 @@ pipeline {
         }
 
         stage('Terraform Apply') {
-            steps {
-                dir(TF_DIR) {
-                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        script {
-                            sh 'terraform apply -auto-approve tfplan '
-                            
-                        def instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
-                            
-                            echo "Instance Public IP: ${instancePublicIp}"
-                            echo "Writing to inventory file with the following values:"
-                            echo "[ec2]"
-                            echo "${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu"
-                        }
-                    }}
-                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        script {
-                            writeFile file: INVENTORY_FILE, text: "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
-                            sh "cat ${INVENTORY_FILE}"  
+    steps {
+        dir(TF_DIR) {
+            withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                script {
+                    // Apply Terraform changes
+                    sh 'terraform apply -auto-approve tfplan'
+                    
+                    // Get the public IP of the instance
+                    def instancePublicIp = sh(script: "terraform output -json | jq -r '.instance_public_ip.value'", returnStdout: true).trim()
+                    
+                    // Log the instance public IP
+                    echo "Instance Public IP: ${instancePublicIp}"
+                    
+                    // Write the inventory file for Ansible
+                    def inventoryContent = "[ec2]\n${instancePublicIp} ansible_ssh_private_key_file=${SS_KEY} ansible_user=ubuntu\n"
+                    writeFile file: INVENTORY_FILE, text: inventoryContent
+                    
+                    // Output the contents of the inventory file for verification
+                    sh "cat ${INVENTORY_FILE}"
                 }
-                           
-                        }
-                    }
-                }
-            
+            }
+        }
+    }
+}
+
 
 
         
@@ -70,7 +71,7 @@ pipeline {
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
         
-                 
+                
                     sh "ls -al"
                     sh "cat ${INVENTORY_FILE}"
                     echo "SSH Key: ${SS_KEY}"
