@@ -9,7 +9,7 @@
       host_port: 5050
       container_port: 8080
       venv_path: "/opt/ansible-venv" 
-      ansible_python_interpreter: /opt/ansible-venv/bin/python # Path for Python virtual environment
+      ansible_python_interpreter: "{{ venv_path }}/bin/python"  # Updated to use venv path
     tasks:
       - name: Output the instance ID
         debug:
@@ -37,16 +37,16 @@
           state: present
   
       - name: Create a Python virtual environment
-        command: python3 -m venv {{ venv_path }}
+        command: "{{ ansible_python_interpreter }} -m venv {{ venv_path }}"
         args:
           creates: "{{ venv_path }}"
+  
+      - name: Install Docker SDK for Python in the virtual environment
+        command: "{{ venv_path }}/bin/pip install docker"
 
       - name: Install boto3 in the virtual environment
         command: "{{ venv_path }}/bin/pip install boto3"
-        
-      - name: Install Docker SDK for Python in the virtual environment
-        command: "{{ venv_path }}/bin/pip install docker"
-      
+
       - name: Download Docker installation script
         command: curl -fsSL https://get.docker.com -o get-docker.sh
   
@@ -63,16 +63,13 @@
         community.docker.docker_image:
           name: "{{ docker_image }}"
           source: pull
-              # Select platform for pulling. If not specified, will pull whatever docker prefers.
           pull:
-              platform: amd64
+            platform: amd64
         
-      - name: Stop a container remove any existing container
+      - name: Stop a container and remove any existing container
         community.docker.docker_container:
           name: "{{ container_name }}"
           state: absent
-          
-
   
       - name: Run the new Docker container
         community.docker.docker_container:
