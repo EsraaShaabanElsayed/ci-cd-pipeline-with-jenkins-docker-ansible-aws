@@ -27,7 +27,7 @@ services:
   petclinic:
    
    # image: mohamedwaleed77/depi_petclinic
-   image: esraa114/depi_petclinic:latest 
+    image: esraa114/depi_petclinic:latest 
     container_name: petapp
     depends_on:
       - mysql
