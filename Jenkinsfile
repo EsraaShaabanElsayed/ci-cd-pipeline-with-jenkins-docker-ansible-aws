@@ -91,12 +91,18 @@ pipeline {
                 env.ANSIBLE_HOST_KEY_CHECKING = 'False'
                  //chmod 400 ${SSH_KEY_PATH}
                     // Run the Ansible playbook
-                    sh """
-                    ls
-                    chmod 400 ${SSH_KEY_PATH}
-                    ansible-playbook -i ${INVENTORY_FILE}  ${ANSIBLE_PLAYBOOK}  -vvv
-                """
-        
+                //     sh """
+                //     ls
+                //     chmod 400 ${SSH_KEY_PATH}
+                //     ansible-playbook -i ${INVENTORY_FILE}  ${ANSIBLE_PLAYBOOK}  -vvv
+                // """
+        ansiColor('xterm') {
+    ansiblePlaybook(
+        playbook:"${ANSIBLE_PLAYBOOK}" ,
+        inventory: "${INVENTORY_FILE}",
+        credentialsId: 'aws-ec2-key-credential',
+        colorized: true)
+}
                     
                 }
                 }
