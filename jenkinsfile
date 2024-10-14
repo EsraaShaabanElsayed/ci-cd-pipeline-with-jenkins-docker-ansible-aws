@@ -52,7 +52,7 @@ pipeline {
                 sshagent([SSH_CREDENTIALS_ID]) {
                     dir("ansible-playbook") {
                         // Run the Ansible playbook for deployment
-                        sh 'ansible-playbook -i inventory playbook.yml'
+                        sh 'ansible-playbook -i inventory newPlaybook.yml'
                     }  
                 }
             }
