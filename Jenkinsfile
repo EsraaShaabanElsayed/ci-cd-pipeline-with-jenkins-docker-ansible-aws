@@ -43,7 +43,7 @@ pipeline {
         dir(TF_DIR) {
            withCredentials([
                 aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-                file(credentialsId: 'ec2-secrtfile', variable: 'SSH_KEY_PATH') // Using the secret file
+                sshUserPrivateKey(credentialsId: 'aws-ec2-key-credential', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: 'SSH_USER') 
             ])  {
                 script {
                     // Apply Terraform changes
@@ -54,17 +54,17 @@ pipeline {
                     
                     // Log the instance public IP
                     echo "Instance Public IP: ${instancePublicIp}"
-                    sh"pwd"
-                    sh "ls -al"
+                    // sh"pwd"
+                    // sh "ls -al"
                     // Write the inventory file for Ansible
         sh """
-        pwd
-        cd ../ansible-playbook/
-        pwd
-        touch   ${env.WORKSPACE}/ansible-playbook/inventory
-        echo "[ec2]" > ${env.WORKSPACE}/ansible-playbook/inventory
-        echo "${instancePublicIp} ansible_ssh_private_key_file=${SSH_KEY_PATH} ansible_user=ubuntu" >> ${env.WORKSPACE}/ansible-playbook/inventory
-    """
+            pwd
+            cd ../ansible-playbook/
+            pwd
+            touch   ${env.WORKSPACE}/ansible-playbook/inventory
+            echo "[ec2]" > ${env.WORKSPACE}/ansible-playbook/inventory
+            echo "${instancePublicIp}  ansible_user=${SSH_USER} ansible_ssh_private_key_file=${SSH_KEY_PATH} " >> ${env.WORKSPACE}/ansible-playbook/inventory
+            """
     sh "cat ${env.WORKSPACE}/ansible-playbook/inventory"
                      //sh "cat ${INVENTORY_FILE}"
                     
@@ -85,16 +85,16 @@ pipeline {
                 script {
                     withCredentials([
                 aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-                file(credentialsId: 'ec2-secrtfile', variable: 'SSH_KEY_PATH')
+                sshUserPrivateKey(credentialsId: 'aws-ec2-key-credential', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: 'SSH_USER') 
             ]) {
         
                 env.ANSIBLE_HOST_KEY_CHECKING = 'False'
-                
+                 //chmod 400 ${SSH_KEY_PATH}
                     // Run the Ansible playbook
                     sh """
                     ls
-                    chmod 400 ${SSH_KEY_PATH}
-                    ansible-playbook -i ${INVENTORY_FILE} --private-key=${SSH_KEY_PATH} ${ANSIBLE_PLAYBOOK} -vvv
+                   
+                    ansible-playbook -i ${INVENTORY_FILE}  ${ANSIBLE_PLAYBOOK}  --private-key=${SSH_KEY_PATH}-vvv
                 """
         
                     

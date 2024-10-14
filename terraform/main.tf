@@ -1,9 +1,9 @@
 
 # Attach SSM policy to the role
-resource "aws_key_pair" "jenkins_ec2" {
-  key_name   = "jenkins_ec2"
-  public_key = var.public_key  # Use a Terraform variable to pass the public key
-}
+# resource "aws_key_pair" "jenkins_ec2" {
+#   key_name   = "jenkins_ec2"
+#   public_key = var.public_key  # Use a Terraform variable to pass the public key
+# }
 
 # Security Group allowing SSH and port 5000
 resource "aws_security_group" "allow_5050_and_ssh" {
@@ -36,8 +36,7 @@ resource "aws_instance" "ec2_instance" {
   ami           = "ami-0866a3c8686eaeeba"  # Update with the appropriate AMI ID for your region
   instance_type = "t2.micro"
  # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
-  key_name      = aws_key_pair.jenkins_ec2.key_name 
-
+  key_name      = "deployment-Instance"
   vpc_security_group_ids = [aws_security_group.allow_5050_and_ssh.id]
 
   
