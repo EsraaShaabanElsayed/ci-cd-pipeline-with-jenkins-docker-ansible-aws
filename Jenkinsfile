@@ -9,6 +9,7 @@ pipeline {
         INVENTORY_FILE = "${ANSIBLE_PLAYBOOK_DIR}/inventory"// Ansible inventory file
         SSH_CREDENTIALS_ID = 'ssh-for-ec2'
 
+
     
     }
 
