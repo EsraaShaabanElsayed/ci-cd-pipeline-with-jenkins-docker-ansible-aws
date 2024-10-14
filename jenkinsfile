@@ -12,6 +12,7 @@ pipeline {
         DOCKER_REPO_NAME = "${DOCKER_HUB_USR}/depi_petclinic:latest"
         DOCKER_HUB_TOKEN = credentials('dockerhub') // Use the ID for the Docker token you created
         NOTI_EMAIL = "example@gmail.com" // Replace with your notification email
+        SSH_CREDENTIALS_ID ='ssh-for-ec2'
     }
 
     stages {
@@ -47,6 +48,7 @@ pipeline {
         }
 
         stage('Deployment') {
+            sshagent([SSH_CREDENTIALS_ID]) {
             steps {
                 dir("ansible-playbook") {
                     // Run the Ansible playbook for deployment
@@ -55,6 +57,7 @@ pipeline {
             }
         }
     }
+
 
     post {
         success {
