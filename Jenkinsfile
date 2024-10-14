@@ -83,7 +83,7 @@ pipeline {
                     ]) {
                         sshagent(['aws-ec2-key-credential']) {
                             dir("ansible-playbook") {
-                                sh 'ansible-playbook -i inventory newPlaybook.yml'
+                                sh 'ansible-playbook -i inventory mainplaybook.yml'
                             }
                         }
                     }
