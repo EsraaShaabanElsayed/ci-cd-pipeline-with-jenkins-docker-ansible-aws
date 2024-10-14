@@ -3,7 +3,8 @@
     hosts: ec2
     become: yes
     vars:
-      docker_image: "mohamedwaleed77/depi_petclinic:latest"
+      docker_image: esraa114/depi_petclinic:latest 
+      #docker_image: "mohamedwaleed77/depi_petclinic:latest"
       container_name: "petclinic_app"
       host_port: 5050
       container_port: 8080
