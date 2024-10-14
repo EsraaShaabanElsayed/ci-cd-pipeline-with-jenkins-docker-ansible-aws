@@ -94,7 +94,7 @@ pipeline {
                     sh """
                     ls
                     chmod 400 ${SSH_KEY_PATH}
-                    ansible-playbook -i ${INVENTORY_FILE}  ${ANSIBLE_PLAYBOOK}  --private-key=${SSH_KEY_PATH} -vvv
+                    ansible-playbook -i ${INVENTORY_FILE}  ${ANSIBLE_PLAYBOOK}  -vvv
                 """
         
                     
