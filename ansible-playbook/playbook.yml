@@ -9,7 +9,8 @@
       host_port: 5050
       container_port: 8080
       venv_path: "/opt/ansible-venv"
-      ansible_python_interpreter: /usr/bin/python3
+      #ansible_python_interpreter: /usr/bin/python3
+      ansible_python_interpreter: "{{ venv_path }}/bin/python"
       #ansible_python_interpreter: /opt/ansible-venv/bin/python # Path for Python virtual environment
     tasks:
       - name: Update apt cache
