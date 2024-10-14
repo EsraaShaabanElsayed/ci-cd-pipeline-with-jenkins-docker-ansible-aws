@@ -24,6 +24,7 @@ pipeline {
 
         stage('Build') {
             steps {
+                 script {
                     sh './autobuild.sh'
                     //sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USR} --password-stdin" 
                     //sh "docker tag ${IMG_NAME} ${DOCKER_REPO_NAME}"
@@ -32,6 +33,8 @@ pipeline {
                 
             }
         }
+        }
+        
 
         stage('Testing') {
             steps {
