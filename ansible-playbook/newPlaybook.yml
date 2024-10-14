@@ -45,12 +45,13 @@
     - name: Download Docker installation script
       command: curl -fsSL https://get.docker.com -o get-docker.sh
       args:
-        creates: "get-docker.sh"
+        chdir: "{{ ansible_env.HOME }}"  # Ensure you're in the user's home directory
 
-    - name: Run Docker installation script
-      command: sh get-docker.sh
-      args:
-        chdir: "{{ ansible_env.HOME }}"  # Specify a directory to run the command
+- name: Run Docker installation script
+  command: sh get-docker.sh
+  args:
+    chdir: "{{ ansible_env.HOME }}"  # Specify the directory where get-docker.sh is located
+  # Specify a directory to run the command
 
     - name: Ensure Docker is running
       service:
