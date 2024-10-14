@@ -8,6 +8,7 @@
     host_port: 5050
     container_port: 8080
     venv_path: "/opt/ansible-venv"
+  
   tasks:
     - name: Update apt cache
       apt:
@@ -47,11 +48,10 @@
       args:
         chdir: "{{ ansible_env.HOME }}"  # Ensure you're in the user's home directory
 
-- name: Run Docker installation script
-  command: sh get-docker.sh
-  args:
-    chdir: "{{ ansible_env.HOME }}"  # Specify the directory where get-docker.sh is located
-  # Specify a directory to run the command
+    - name: Run Docker installation script
+      command: sh get-docker.sh
+      args:
+        chdir: "{{ ansible_env.HOME }}"  # Specify the directory where get-docker.sh is located
 
     - name: Ensure Docker is running
       service:
