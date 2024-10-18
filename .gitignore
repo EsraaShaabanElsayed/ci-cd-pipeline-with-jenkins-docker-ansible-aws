@@ -8,6 +8,7 @@ target/*
 *.iml
 /target
 /savedata_mw
+/.terraform
 .sts4-cache/
 .vscode/*
 !.vscode/settings.json
