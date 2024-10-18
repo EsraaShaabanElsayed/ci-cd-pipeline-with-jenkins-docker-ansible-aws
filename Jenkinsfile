@@ -68,7 +68,7 @@ pipeline {
         }
 
         stage('Terraform Apply') {
-    steps {
+        steps {
         dir(TF_DIR) {
         withCredentials([
                 aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
