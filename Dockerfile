@@ -13,11 +13,9 @@ RUN catalina.sh run & sleep 5 && catalina.sh stop
 RUN if [ -f ./properties_configuration_mw/application.properties ]; then \
         cp ./properties_configuration_mw/application.properties /usr/local/tomcat/webapps/petclinic/WEB-INF/classes/application.properties; \
     fi
-
 # copy application-mysql.properties if it exists
 RUN if [ -f ./properties_configuration_mw/application-mysql.properties ]; then \
         cp ./properties_configuration_mw/application-mysql.properties /usr/local/tomcat/webapps/petclinic/WEB-INF/classes/application-mysql.properties; \
     fi
-
 # start Tomcat
 CMD ["catalina.sh", "run"]
