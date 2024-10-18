@@ -10,7 +10,7 @@ pipeline {
         ANSIBLE_PLAYBOOK_DIR = 'ansible-playbook' 
         ANSIBLE_PLAYBOOK = "${ANSIBLE_PLAYBOOK_DIR}/mainplaybook.yml"
         INVENTORY_FILE = "${ANSIBLE_PLAYBOOK_DIR}/inventory"// Ansible inventory file
-        SSH_CREDENTIALS_ID = 'ssh-for-ec2'
+       
 
         IMG_NAME = "petclinic-tomcat:latest"
         DOCKER_HUB_USR = "esraa114" // Your Docker Hub username
