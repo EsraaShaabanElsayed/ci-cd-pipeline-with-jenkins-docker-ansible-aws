@@ -7,9 +7,9 @@
 
 # Security Group allowing SSH and port 5000
 
-resource "aws_security_group" "allow_5050_and_ssh" {
+resource "aws_security_group" "allow_port_5050_and_ssh" {
 
-  name        = "allow_5050"
+  name        = "allow_port_5050_and_ssh"
   description = "Allow  port 5050 inbound traffic"
 
   ingress {
@@ -39,7 +39,7 @@ resource "aws_instance" "ec2_instance" {
   instance_type = "t2.micro"
   # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
   key_name               = "deployment-Instance"
-  vpc_security_group_ids = [aws_security_group.allow_5050_and_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_port_5050_and_ssh.id]
 
   tags = {
     Name = "depi-ec2-instance"
