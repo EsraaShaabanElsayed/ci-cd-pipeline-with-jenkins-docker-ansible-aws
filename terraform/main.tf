@@ -6,7 +6,15 @@
 # }
 
 # Security Group allowing SSH and port 5000
+data "aws_security_group" "existing" {
+  filter {
+    name   = "group-name"
+    values = ["allow_5050"]
+  }
+}
+
 resource "aws_security_group" "allow_5050_and_ssh" {
+  count = length(data.aws_security_group.existing) > 0 ? 0 : 1
   name        = "allow_5050"
   description = "Allow  port 5050 inbound traffic"
 
