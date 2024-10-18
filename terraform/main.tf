@@ -6,15 +6,9 @@
 # }
 
 # Security Group allowing SSH and port 5000
-data "aws_security_group" "existing" {
-  filter {
-    name   = "group-name"
-    values = ["allow_5050"]
-  }
-}
 
 resource "aws_security_group" "allow_5050_and_ssh" {
-  count = length(data.aws_security_group.existing) > 0 ? 0 : 1
+
   name        = "allow_5050"
   description = "Allow  port 5050 inbound traffic"
 
@@ -22,13 +16,13 @@ resource "aws_security_group" "allow_5050_and_ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Change this to restrict access
+    cidr_blocks = ["0.0.0.0/0"] # Change this to restrict access
   }
   ingress {
     from_port   = 5050
     to_port     = 5050
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Update to restrict access if needed
+    cidr_blocks = ["0.0.0.0/0"] # Update to restrict access if needed
   }
 
   egress {
@@ -41,18 +35,14 @@ resource "aws_security_group" "allow_5050_and_ssh" {
 
 # Provision an EC2 instance with the updated security group
 resource "aws_instance" "ec2_instance" {
-  ami           = "ami-0866a3c8686eaeeba"  # Update with the appropriate AMI ID for your region
+  ami           = "ami-0866a3c8686eaeeba" # Update with the appropriate AMI ID for your region
   instance_type = "t2.micro"
- # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
-  key_name      = "deployment-Instance"
-  vpc_security_group_ids = [aws_security_group.allow_5050_and_ssh[0].id]
-
-
-  
-
+  # iam_instance_profile = aws_iam_instance_profile.ec2_ssm_instance_profile.name
+  key_name               = "deployment-Instance"
+  vpc_security_group_ids = [aws_security_group.allow_5050_and_ssh.id]
 
   tags = {
-    Name = "ssm-managed-ec2-instance"
+    Name = "depi-ec2-instance"
   }
 
   # User data to install SSM agent if not pre-installed
@@ -67,7 +57,7 @@ pip3 install boto3
 }
 
 
-data "aws_vpc" "default"{
+data "aws_vpc" "default" {
   default = true
 }
 
@@ -100,7 +90,7 @@ data "aws_vpc" "default"{
 # resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 #   role       = aws_iam_role.ec2_ssm_role.name
 #   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-      
+
 # }
 
 # # Create an IAM Instance Profile

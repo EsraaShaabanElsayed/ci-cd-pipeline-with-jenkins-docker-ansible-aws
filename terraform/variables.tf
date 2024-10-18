@@ -1,5 +1,5 @@
 variable "region" {
-  type = string
+  type        = string
   description = "this is the region ec2 will be deployed "
 }
 # variable "public_key" {
