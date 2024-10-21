@@ -12,9 +12,9 @@ RUN catalina.sh run & sleep 5 && catalina.sh stop
 
 #
 COPY ./properties_configuration_mw/application.properties /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application.properties
+RUN catalina.sh run & sleep 5 && catalina.sh stop
 #
 COPY ./properties_configuration_mw/application-mysql.properties /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application-mysql.properties
-
 RUN catalina.sh run & sleep 5 && catalina.sh stop
 
  
