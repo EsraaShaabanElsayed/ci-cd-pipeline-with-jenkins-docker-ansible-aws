@@ -1,6 +1,6 @@
 ---
 - name: Deploy Docker container on Ubuntu EC2
-  hosts: ec2
+  hosts: all
   become: yes
   vars:
     docker_image: esraa114/depi_petclinic:latest 
@@ -58,23 +58,47 @@
         name: docker
         state: started
         enabled: true
+    - name: Create application directory
+      ansible.builtin.file:
+          path: /opt/petclinic
+          state: directory
+          
+    - name: Copy database_init_mw directory to target machine
+      ansible.builtin.copy:
+        src: /home/esraa/ci-cd-pipeline-with-jenkins-docker-ansible-aws/database_init_mw/
+        dest: /opt/petclinic/database_init_mw/
+        mode: '0755'
+       
 
-    - name: Pull an image
-      community.docker.docker_image:
-        name: "{{ docker_image }}"
-        source: pull
-        pull:
-          platform: amd64
+    - name: Copy docker-compose.yml file to target machine
+      ansible.builtin.synchronize:
+        src: /home/esraa/ci-cd-pipeline-with-jenkins-docker-ansible-aws/docker-compose.yml
+        dest: /opt/petclinic/docker-compose.yml
+        recursive: yes
+
+    - name: Deploy the application with Docker Compose
+      ansible.builtin.command:
+          cmd: docker compose up -d
+      args:
+          chdir: /opt/petclinic  # Make sure this is the correct path where your docker-compose.yml file is located
+      
+
+    # - name: Pull an image
+    #   community.docker.docker_image:
+    #     name: "{{ docker_image }}"
+    #     source: pull
+    #     pull:
+    #       platform: amd64
         
-    - name: Stop and remove any existing container
-      community.docker.docker_container:
-        name: "{{ container_name }}"
-        state: absent
+    # - name: Stop and remove any existing container
+    #   community.docker.docker_container:
+    #     name: "{{ container_name }}"
+    #     state: absent
 
-    - name: Run the new Docker container
-      community.docker.docker_container:
-        name: "{{ container_name }}"
-        image: "{{ docker_image }}"
-        state: started
-        ports:
-          - "{{ host_port }}:{{ container_port }}"
+    # - name: Run the new Docker container
+    #   community.docker.docker_container:
+    #     name: "{{ container_name }}"
+    #     image: "{{ docker_image }}"
+    #     state: started
+    #     ports:
+    #       - "{{ host_port }}:{{ container_port }}"
