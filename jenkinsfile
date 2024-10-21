@@ -115,6 +115,7 @@ stage('Ansible Deploy') {
                 }
             }
         }
+        
        stage('Wait and Destroy') {
             steps {
                 dir(TF_DIR) {
