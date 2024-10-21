@@ -23,7 +23,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: "${REPO_URL}", branch: 'main'
+                git url: "${REPO_URL}", branch: 'k8s-test'
                 sh 'pwd ; ls -la'
             }
         }
@@ -35,9 +35,9 @@ pipeline {
                     sh './autobuild.sh'
                     
                     // Log in to Docker Hub
-                    // sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USR} --password-stdin"
-                    // sh "docker tag ${IMG_NAME} ${DOCKER_REPO_NAME}"
-                    // sh "docker push ${DOCKER_REPO_NAME}"
+                      sh "echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USR} --password-stdin"
+                      sh "docker tag ${IMG_NAME} ${DOCKER_REPO_NAME}"
+                     sh "docker push ${DOCKER_REPO_NAME}"
                 }
             }
         }
