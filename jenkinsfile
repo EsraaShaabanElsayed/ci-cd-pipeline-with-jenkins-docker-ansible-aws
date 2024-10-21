@@ -45,6 +45,7 @@ pipeline {
         stage('Testing') {
             steps {
                 // Run the application using Docker Compose and execute tests
+                 sh 'docker compose down'
                 sh 'docker compose up -d && sleep 60'
                 dir("test_scripts") {
                     sh './tests.sh'
