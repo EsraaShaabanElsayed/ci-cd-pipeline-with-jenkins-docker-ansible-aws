@@ -7,6 +7,7 @@
     container_name: "petclinic_app"
     host_port: 5050
     container_port: 8080
+    db_container_name : petsql
     venv_path: "/opt/ansible-venv"
   
   tasks:
@@ -65,14 +66,14 @@
           
     - name: Copy database_init_mw directory to target machine
       ansible.builtin.copy:
-        src: /home/esraa/ci-cd-pipeline-with-jenkins-docker-ansible-aws/database_init_mw/
+        src: "{{ lookup('env', 'WORKSPACE') }}/database_init_mw/"
         dest: /opt/petclinic/database_init_mw/
         mode: '0755'
        
 
     - name: Copy docker-compose.yml file to target machine
       ansible.builtin.synchronize:
-        src: /home/esraa/ci-cd-pipeline-with-jenkins-docker-ansible-aws/docker-compose.yml
+        src:  "{{ lookup('env', 'WORKSPACE') }}/docker-compose.yml"
         dest: /opt/petclinic/docker-compose.yml
         recursive: yes
 
@@ -81,7 +82,22 @@
           cmd: docker compose up -d
       args:
           chdir: /opt/petclinic  # Make sure this is the correct path where your docker-compose.yml file is located
-      
+    - name: Wait for MySQL container to be ready
+      wait_for:
+        port: 3306  # Default MySQL port
+        delay: 10  # Delay before checking the port
+        timeout: 60  # Total time to wait
+        state: started
+    
+    # - name: Initialize database with schema and data
+    #   command: >
+    #         docker exec -i {{ db_container_name }} mysql -u root -pYOUR_ROOT_PASSWORD petclinic < /opt/petclinic/database_init_mw/01-schema.sql &&
+    #         docker exec -i {{ db_container_name }} mysql -u root -pYOUR_ROOT_PASSWORD petclinic < /opt/petclinic/database_init_mw/02-data.sql
+    #   args:
+    #       chdir: /opt/petclinic/database_init_mw/
+    #    # Prevent running this on the host
+    
+    
 
     # - name: Pull an image
     #   community.docker.docker_image:
