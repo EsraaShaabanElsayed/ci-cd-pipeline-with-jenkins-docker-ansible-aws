@@ -39,5 +39,5 @@ Comprehensive documentation of the CI/CD pipeline.
 
 # Project Flow Diagram
 
-![Untitled Diagram drawio](https://github.com/user-attachments/assets/a51f8932-21d6-46d7-b5d8-9622dcf9b069)
+![main_diagram](https://github.com/user-attachments/assets/9802a676-535a-4b34-87bd-78ec4fd5623c)
 
