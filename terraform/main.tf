@@ -7,7 +7,7 @@
 
 # Security Group allowing SSH and port 5000
 
-resource "aws_security_group" "allow_port_5050_and_ssh" {
+resource "aws_security_group" "allow_5050_and_ssh" {
 
   name        = "allow_5050_and_ssh"
   description = "Allow  port 5050 inbound traffic"
