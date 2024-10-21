@@ -115,26 +115,23 @@ stage('Ansible Deploy') {
                 }
             }
         }
-        stage('Wait and Destroy') {
-
-           dir(TF_DIR) {
-            steps{
-        withCredentials([
-                aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
-                sshUserPrivateKey(credentialsId: 'aws-ec2-key-credential', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: 'SSH_USER') 
-            ])  {
-                script {
-                    // Wait for a specific time (e.g., 10 minutes)
-                    sleep(time: 3, unit: 'MINUTES')
-                    
-                    // Destroy the resources using Terraform
-                    sh 'terraform destroy -auto-approve'
+       stage('Wait and Destroy') {
+            steps {
+                dir(TF_DIR) {
+                    withCredentials([
+                        aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
+                        sshUserPrivateKey(credentialsId: 'aws-ec2-key-credential', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: 'SSH_USER')
+                    ]) {
+                        script {
+                            sleep(time: 3, unit: 'MINUTES')
+                            sh 'terraform destroy -auto-approve'
+                        }
+                    }
                 }
             }
         }
-           }
-        }
     }
+
 
     
 
