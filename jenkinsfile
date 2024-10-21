@@ -134,7 +134,7 @@ stage('Ansible Deploy') {
         }
     }
 
-    }
+    
 
     post {
         success {
@@ -158,4 +158,5 @@ stage('Ansible Deploy') {
             }
         }
     }
-}
+    }
+
