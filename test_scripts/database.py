@@ -2,7 +2,7 @@ import requests
 import mysql.connector
 
 # URL of the form
-form_url = 'http://localhost:5050/petclinic/owners/new'
+form_url = 'http://localhost:5050/owners/new'
 
 # Data to be filled in the form
 data = {

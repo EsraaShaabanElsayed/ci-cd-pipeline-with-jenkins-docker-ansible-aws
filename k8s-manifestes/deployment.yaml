@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic-depi-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: petclinic-depi
+  template:
+    metadata:
+      labels:
+        app: petclinic-depi
+    spec:
+      containers:
+      - name: petclinic-depi-container
+        image: esraa114/depi_petclinic:latest
+        ports:
+        - containerPort: 8080  # Internal port exposed by the container
+        volumeMounts:
+        - name: storage
+          mountPath: /data  # Mount path for persistent storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: petclinic-depi-pvc  # Reference to your PersistentVolumeClaim
