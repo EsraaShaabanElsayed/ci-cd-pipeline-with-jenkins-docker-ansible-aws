@@ -9,14 +9,6 @@ EXPOSE 8080
 # run Tomcat for a short time and then stop it to initialize the application
 RUN catalina.sh run & sleep 5 && catalina.sh stop
 
-
-#
-COPY ./properties_configuration_mw/application.properties /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application.properties
-RUN catalina.sh run & sleep 5 && catalina.sh stop
-#
-COPY ./properties_configuration_mw/application-mysql.properties /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application-mysql.properties
-RUN catalina.sh run & sleep 5 && catalina.sh stop
-
  
 # start Tomcat
 CMD ["catalina.sh", "run"]
