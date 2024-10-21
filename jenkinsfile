@@ -23,7 +23,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: "${REPO_URL}", branch: 'k8s-test'
+                git url: "${REPO_URL}", branch: 'main'
                 sh 'pwd ; ls -la'
             }
         }
