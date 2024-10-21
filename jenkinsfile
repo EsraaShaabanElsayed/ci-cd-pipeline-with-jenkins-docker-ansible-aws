@@ -118,6 +118,7 @@ stage('Ansible Deploy') {
         stage('Wait and Destroy') {
 
            dir(TF_DIR) {
+            steps{
         withCredentials([
                 aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'),
                 sshUserPrivateKey(credentialsId: 'aws-ec2-key-credential', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: 'SSH_USER') 
@@ -131,6 +132,7 @@ stage('Ansible Deploy') {
                 }
             }
         }
+           }
         }
     }
 
